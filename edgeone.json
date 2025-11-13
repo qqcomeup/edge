@@ -1,5 +1,5 @@
 {
-  "name": "tmdb-proxy-auth-fix",
+  "name": "tmdb-proxy-stable",
   "outputDirectory": "./",
   "rewrites": [
     {
