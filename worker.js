@@ -28,16 +28,16 @@ export default {
     const userAgent = request.headers.get('User-Agent') || '';
     const clientIP = request.headers.get('CF-Connecting-IP') || 'unknown';
     const country = request.cf?.country || 'unknown';
-    
+
     // 检测恶意爬虫
     const suspiciousUA = ['curl', 'wget', 'python', 'scrapy', 'spider'];
     const isSuspicious = suspiciousUA.some(ua => userAgent.toLowerCase().includes(ua));
-    
+
     if ((userAgent.toLowerCase().includes('bot') && !userAgent.includes('googlebot')) || 
         (isSuspicious && !userAgent.includes('Mozilla'))) {
       return new Response(getFake404HTML(), { status: 404, headers: { 'Content-Type': 'text/html', ...corsHeaders } });
     }
-    
+
     // 简单的地理位置检查（可选）
     const blockedCountries = []; // 可以添加需要屏蔽的国家代码
     if (blockedCountries.includes(country)) {
@@ -58,7 +58,7 @@ export default {
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
     }
-    
+
     // 健康检查端点（无需API Key）
     if (pathname === '/health' || pathname === '/ping') {
       return new Response(JSON.stringify({
@@ -82,7 +82,7 @@ export default {
     if (pathname.startsWith('/t/p/')) {
       try {
         const imageUrl = `https://image.tmdb.org${pathname}`;
-        
+
         // 检测客户端支持的图片格式
         const acceptHeader = request.headers.get('Accept') || '';
         const supportsWebP = acceptHeader.includes('image/webp');
@@ -99,7 +99,7 @@ export default {
             mirage: true, // 自适应图片
           },
         });
-        
+
         if (!response.ok) {
           return new Response(getFake404HTML(), {
             status: 404,
@@ -139,7 +139,7 @@ export default {
 
       try {
         let apiUrl = `https://api.tmdb.org${pathname}${search}`;
-        
+
         if (!search.includes('api_key=')) {
           const separator = search ? '&' : '?';
           apiUrl += `${separator}api_key=${API_KEY}`;
@@ -158,13 +158,13 @@ export default {
         });
 
         const responseText = await response.text();
-        
+
         // 智能缓存控制
         const cacheTime = pathname.includes('configuration') ? 3600 : // 配置1小时
                          pathname.includes('search') ? 300 :           // 搜索5分钟
                          pathname.includes('popular') ? 1800 :         // 热门30分钟
                          600; // 默认10分钟
-        
+
         return new Response(responseText, {
           status: response.status,
           headers: {
@@ -228,7 +228,7 @@ function getFake404HTML() {
         <div class="error-code">404</div>
         <h1 class="error-title">Page Not Found</h1>
         <p class="error-message">The requested resource could not be found on this server.</p>
-        
+
         <div class="error-details">
             <strong>Error Details:</strong><br>
             • Request Method: GET<br>
@@ -236,19 +236,19 @@ function getFake404HTML() {
             • Server: Cloudflare Workers<br>
             • Timestamp: ${new Date().toISOString()}
         </div>
-        
+
         <p style="color: #6c757d; margin: 1.5rem 0;">
             If you believe this is an error, please contact the site administrator.
         </p>
-        
+
         <a href="javascript:history.back()" class="back-link">← Go Back</a>
-        
+
         <div class="footer">
             <p>This page was generated automatically.</p>
             <div class="server-info">Server: Cloudflare Workers | Error Code: HTTP_404_NOT_FOUND</div>
         </div>
     </div>
-    
+
     <script>
         // 隐藏的开发者工具信息
         console.log('%c🎬 TMDB Proxy Service v2.0', 'color: #007bff; font-size: 16px; font-weight: bold;');
@@ -264,7 +264,7 @@ function getFake404HTML() {
         console.log('  • URL Param: ?key=your_api_key');
         console.log('%cFeatures: Cache, Compression, Security, Geo-blocking', 'color: #28a745;');
         console.log('%c⚠️ Disguised as 404 for security', 'color: #ffc107;');
-        
+
         // 隐藏测试函数
         window.testAPI = () => fetch('/3/configuration').then(r=>r.json()).then(console.log);
         window.testImage = () => { const i=new Image(); i.onload=()=>console.log('✅ Image OK'); i.onerror=()=>console.log('❌ Image failed'); i.src='/t/p/w500/bcP7FtskwsNp1ikpMQJzDPjofP5.jpg'; };
