@@ -1,0 +1,27 @@
+{
+  "headers": [],
+  "redirects": [],
+  "rewrites": [],
+  "caches": [
+    {
+      "source": "/t/p/*",
+      "cacheTtl": 604800
+    },
+    {
+      "source": "/3/configuration*",
+      "cacheTtl": 3600
+    },
+    {
+      "source": "/3/search*",
+      "cacheTtl": 300
+    },
+    {
+      "source": "/3/movie/popular*",
+      "cacheTtl": 1800
+    },
+    {
+      "source": "/3/*",
+      "cacheTtl": 600
+    }
+  ]
+}
