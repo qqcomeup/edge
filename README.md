@@ -28,7 +28,7 @@
 
 2. **创建新的 Worker**
 3. 如下图<img width="2808" height="628" alt="image" src="https://github.com/user-attachments/assets/dbac6a29-3c9e-45c2-adff-a94608b1af60" />
-   - 点击 "Create a Service"
+   - 点击 "创建应用"
    - 输入服务名称（如：`tmdb-proxy`）
    - 选择 "HTTP handler" 模板
 
